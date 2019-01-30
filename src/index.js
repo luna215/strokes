@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
+import Colors from './Colors';
 
 class Strokes extends Component {
 
     constructor(props) {
         super(props);
+
+        this.hexValue = '#FF7E47';
 
         // INITIALIZING VARAIBLES HERE
         this.mouseDown = false;
@@ -13,6 +17,7 @@ class Strokes extends Component {
         this.namespace = 'http://www.w3.org/2000/svg';
 
         // BINDING FUNCTIONS HERE
+        this.setHexValue = this.setHexValue.bind(this);
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleDrag = this.handleDrag.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -28,15 +33,19 @@ class Strokes extends Component {
                 onMouseUp={this.handleMouseUp}
                 viewBox="0 0 800 400">
                     <g className="circles">
-                        {/* TODO: Append the circles here to create a path. */}
                     </g>
                 </svg>
+                <Colors sendValue={this.setHexValue} />
             </div>
         )
     }
 
     componentDidMount() {
         this.gElement = document.getElementsByClassName('circles')[0];
+    }
+
+    setHexValue(hexValue) {
+        this.hexValue = hexValue;
     }
 
     handleMouseDown(event) {
@@ -50,17 +59,12 @@ class Strokes extends Component {
         pt.y = event.clientY;
         const svgP = pt.matrixTransform(this.myRef.getScreenCTM().inverse());
         let circle = document.createElementNS(this.namespace, 'circle');
-        circle.setAttribute('r', '2');
-        circle.setAttribute('fill', 'orange');
+        circle.setAttribute('r', '10');
+        circle.setAttribute('fill', `${this.hexValue}`);
         circle.setAttribute('cx', `${svgP.x}`);
         circle.setAttribute('cy', `${svgP.y}`);
         circle.setAttribute('class', 'stroke');
-        // TODO: Append circle to g element with the className circles
         this.gElement.append(circle);
-
-        console.log(`${svgP.x}, ${svgP.y}`);
-
-        console.log(`${event.clientX}, ${event.clientY}`);
     }
 
     handleMouseUp(event) {
